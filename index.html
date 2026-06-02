@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emmanuel Petero — Android Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080c10;--surface:#0d1117;--card:#0d1117;--border:#1e2d3d;--border2:#243447;
+  --accent:#3ddc84;--accent2:#4285f4;--accent-dim:rgba(61,220,132,0.08);
+  --text:#cdd9e5;--muted:#768390;--dim:#3d4f61;
+  --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:400;line-height:1.7;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(61,220,132,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(61,220,132,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:0;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1rem 2.5rem;background:rgba(8,12,16,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--mono);font-size:0.8rem;color:var(--accent);letter-spacing:0.05em;display:flex;align-items:center;gap:0.5rem;}
+.nav-logo::before{content:'▶';font-size:0.6rem;animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:var(--mono);font-size:0.78rem;letter-spacing:0.05em;transition:color 0.2s;}
+.nav-links a:hover{color:var(--accent);}
+
+.hero{min-height:100vh;display:flex;align-items:center;padding:7rem 2.5rem 4rem;position:relative;z-index:1;}
+.hero-inner{display:grid;grid-template-columns:1fr auto;gap:5rem;align-items:center;max-width:1100px;margin:0 auto;width:100%;}
+.hero-glow{position:absolute;top:50%;left:60%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(61,220,132,0.05) 0%,transparent 65%);pointer-events:none;}
+.hero-glow2{position:absolute;top:30%;left:20%;transform:translate(-50%,-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(66,133,244,0.04) 0%,transparent 65%);pointer-events:none;}
+.hero-tag{font-family:var(--mono);font-size:0.72rem;color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.25rem;display:flex;align-items:center;gap:0.75rem;}
+.hero-tag::before{content:'//';color:var(--dim);}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:600;line-height:1.1;margin-bottom:1.25rem;color:#e6edf3;letter-spacing:-0.02em;}
+.hero h1 .name-accent{color:var(--accent);display:block;}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:480px;margin-bottom:2.5rem;line-height:1.85;font-weight:300;}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;background:var(--accent);color:#080c10;text-decoration:none;font-size:0.85rem;font-weight:600;font-family:var(--mono);letter-spacing:0.05em;border-radius:4px;transition:opacity 0.2s,transform 0.15s;}
+.btn-primary:hover{opacity:0.85;transform:translateY(-2px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:0.5rem;padding:0.75rem 1.5rem;border:1px solid var(--border2);color:var(--text);text-decoration:none;font-size:0.85rem;font-family:var(--mono);letter-spacing:0.05em;border-radius:4px;transition:border-color 0.2s,transform 0.15s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);}
+
+.phone-wrap{position:relative;flex-shrink:0;}
+.phone{width:200px;height:360px;background:#0d1117;border:2px solid var(--border2);border-radius:28px;position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(61,220,132,0.1),0 0 40px rgba(61,220,132,0.06),inset 0 0 0 1px rgba(255,255,255,0.03);}
+.phone::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:60px;height:4px;background:var(--border2);border-radius:4px;z-index:2;}
+.phone-screen{position:absolute;inset:24px 0 0;display:flex;flex-direction:column;align-items:center;padding:1rem 0.75rem 0.75rem;gap:0.5rem;}
+.phone-avatar{width:80px;height:80px;border-radius:50%;border:2px solid var(--accent);overflow:hidden;margin-bottom:0.25rem;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.phone-avatar img{width:100%;height:100%;object-fit:cover;}
+.phone-avatar-placeholder{font-family:var(--mono);font-size:1.5rem;color:var(--accent);font-weight:500;}
+.phone-name{font-size:0.7rem;font-weight:600;color:#e6edf3;letter-spacing:0.05em;text-align:center;}
+.phone-role{font-family:var(--mono);font-size:0.58rem;color:var(--accent);letter-spacing:0.08em;text-align:center;}
+.phone-divider{width:100%;height:1px;background:var(--border);margin:0.25rem 0;}
+.phone-stat-row{display:flex;gap:0.5rem;width:100%;}
+.phone-stat{flex:1;background:rgba(61,220,132,0.06);border:1px solid rgba(61,220,132,0.12);border-radius:6px;padding:0.5rem 0.25rem;text-align:center;}
+.phone-stat-num{font-family:var(--mono);font-size:0.8rem;color:var(--accent);font-weight:500;}
+.phone-stat-label{font-size:0.5rem;color:var(--muted);letter-spacing:0.05em;}
+.phone-bar{width:100%;background:rgba(30,45,61,0.8);border-radius:4px;padding:0.4rem 0.6rem;display:flex;align-items:center;gap:0.4rem;}
+.phone-bar-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;}
+.phone-bar-text{font-family:var(--mono);font-size:0.5rem;color:var(--muted);flex:1;}
+.phone-bar-badge{font-family:var(--mono);font-size:0.45rem;color:var(--accent);background:rgba(61,220,132,0.1);padding:1px 4px;border-radius:3px;}
+.badge-float{position:absolute;background:var(--surface);border:1px solid var(--border2);border-radius:6px;padding:0.4rem 0.75rem;font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.05em;white-space:nowrap;}
+.badge-float.b1{top:-20px;right:-30px;}
+.badge-float.b2{bottom:40px;left:-50px;}
+.badge-float.b3{bottom:-10px;right:-20px;}
+
+section{padding:5rem 2.5rem;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.section-label{font-family:var(--mono);font-size:0.72rem;color:var(--dim);letter-spacing:0.1em;margin-bottom:0.5rem;}
+.section-title{font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:600;margin-bottom:3rem;color:#e6edf3;letter-spacing:-0.02em;}
+.section-title span{color:var(--accent);}
+
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.about-text p{color:var(--muted);margin-bottom:1.25rem;font-size:0.95rem;line-height:1.9;}
+.about-text p strong{color:var(--text);font-weight:500;}
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.about-card-header{background:#0a0f15;padding:0.6rem 1rem;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid var(--border);}
+.dot{width:8px;height:8px;border-radius:50%;}
+.dot.r{background:#ff5f57;}.dot.y{background:#febc2e;}.dot.g{background:#28c840;}
+.about-card-title{font-family:var(--mono);font-size:0.65rem;color:var(--dim);letter-spacing:0.1em;margin-left:0.25rem;}
+.about-card-body{padding:1.25rem;font-family:var(--mono);font-size:0.75rem;line-height:2;}
+.code-comment{color:#3d4f61;}.code-key{color:#4285f4;}.code-str{color:#3ddc84;}.code-num{color:#f0883e;}.code-bracket{color:#768390;}
+
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;transition:border-color 0.2s,transform 0.2s;position:relative;overflow:hidden;}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity 0.2s;}
+.skill-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.skill-card:hover::before{opacity:1;}
+.skill-icon-label{font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.75rem;}
+.skill-card h3{font-size:0.9rem;font-weight:500;color:#e6edf3;margin-bottom:0.5rem;}
+.skill-card p{font-size:0.78rem;color:var(--muted);line-height:1.7;}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.25rem;}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;display:flex;flex-direction:column;cursor:pointer;position:relative;}
+.project-card:hover{border-color:rgba(61,220,132,0.35);transform:translateY(-4px);}
+.project-card:hover .project-overlay{opacity:1;}
+.project-thumb{width:100%;height:170px;background:#0a0f15;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--border);overflow:hidden;position:relative;}
+.project-thumb img{width:100%;height:100%;object-fit:cover;}
+.project-overlay{position:absolute;inset:0;background:rgba(8,12,16,0.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;opacity:0;transition:opacity 0.25s;}
+.project-overlay-icon{font-size:1.5rem;}
+.project-overlay-text{font-family:var(--mono);font-size:0.65rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;}
+.project-thumb-placeholder{display:flex;flex-direction:column;align-items:center;gap:0.75rem;}
+.ph-icon{width:48px;height:48px;border-radius:12px;background:rgba(61,220,132,0.08);border:1px solid rgba(61,220,132,0.15);display:flex;align-items:center;justify-content:center;font-size:1.25rem;}
+.ph-hint{font-family:var(--mono);font-size:0.6rem;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;}
+.project-body{padding:1.25rem;flex:1;display:flex;flex-direction:column;}
+.project-tags{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.875rem;}
+.tag{font-family:var(--mono);font-size:0.6rem;padding:0.2rem 0.5rem;background:rgba(61,220,132,0.07);color:var(--accent);border:1px solid rgba(61,220,132,0.12);border-radius:3px;letter-spacing:0.05em;}
+.tag.blue{background:rgba(66,133,244,0.07);color:#4285f4;border-color:rgba(66,133,244,0.12);}
+.project-body h3{font-size:1rem;font-weight:500;color:#e6edf3;margin-bottom:0.5rem;}
+.project-body p{font-size:0.82rem;color:var(--muted);line-height:1.75;flex:1;margin-bottom:1rem;}
+.project-footer{display:flex;align-items:center;justify-content:space-between;}
+.project-link{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--accent);text-decoration:none;font-family:var(--mono);letter-spacing:0.05em;}
+.click-hint{font-family:var(--mono);font-size:0.6rem;color:var(--dim);letter-spacing:0.08em;}
+
+.profile-section{display:flex;align-items:center;gap:2rem;margin-bottom:3rem;padding:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:8px;}
+.profile-photo{width:100px;height:100px;border-radius:50%;border:2px solid var(--accent);overflow:hidden;flex-shrink:0;background:var(--surface);display:flex;align-items:center;justify-content:center;}
+.profile-photo img{width:100%;height:100%;object-fit:cover;}
+.profile-photo-placeholder{font-family:var(--mono);font-size:2rem;color:var(--accent);font-weight:500;}
+.profile-info h2{font-size:1.25rem;font-weight:600;color:#e6edf3;margin-bottom:0.25rem;}
+.profile-info p{font-family:var(--mono);font-size:0.78rem;color:var(--accent);letter-spacing:0.05em;margin-bottom:0.5rem;}
+.profile-info span{font-size:0.82rem;color:var(--muted);}
+
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.contact-text h2{font-size:2rem;font-weight:600;color:#e6edf3;margin-bottom:1rem;letter-spacing:-0.02em;}
+.contact-text p{color:var(--muted);font-size:0.95rem;line-height:1.85;}
+.contact-links{display:flex;flex-direction:column;gap:0.75rem;}
+.contact-item{display:flex;align-items:center;gap:1rem;padding:0.875rem 1.25rem;background:var(--card);border:1px solid var(--border);border-radius:6px;text-decoration:none;color:var(--text);transition:border-color 0.2s;}
+.contact-item:hover{border-color:rgba(61,220,132,0.3);}
+.contact-icon{font-family:var(--mono);font-size:0.62rem;color:var(--accent);letter-spacing:0.1em;min-width:55px;text-transform:uppercase;}
+.contact-val{font-size:0.82rem;color:var(--muted);font-family:var(--mono);}
+
+footer{text-align:center;padding:2.5rem;border-top:1px solid var(--border);font-family:var(--mono);font-size:0.7rem;color:var(--dim);letter-spacing:0.05em;position:relative;z-index:1;}
+.divider{border:none;border-top:1px solid var(--border);margin:0 2.5rem;position:relative;z-index:1;}
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.55s ease,transform 0.55s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+
+/* ===== MODAL ===== */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(4,6,8,0.92);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.25s;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all;}
+
+.modal{
+  background:#0d1117;
+  border:1px solid var(--border2);
+  border-radius:12px;
+  width:100%;max-width:820px;
+  max-height:90vh;
+  display:flex;flex-direction:column;
+  transform:scale(0.95) translateY(12px);
+  transition:transform 0.25s;
+  overflow:hidden;
+}
+.modal-backdrop.open .modal{transform:scale(1) translateY(0);}
+
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.modal-header-left{display:flex;align-items:center;gap:0.75rem;}
+.modal-dots{display:flex;gap:0.4rem;}
+.modal-title{font-family:var(--mono);font-size:0.8rem;color:var(--muted);letter-spacing:0.05em;}
+.modal-project-name{font-size:1rem;font-weight:600;color:#e6edf3;}
+.modal-close{
+  background:none;border:1px solid var(--border);color:var(--muted);
+  width:32px;height:32px;border-radius:6px;cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center;
+  transition:border-color 0.2s,color 0.2s;font-family:var(--mono);
+}
+.modal-close:hover{border-color:var(--accent);color:var(--accent);}
+
+.modal-body{
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  flex:1;
+}
+
+/* MAIN IMAGE VIEWER */
+.modal-main-img{
+  width:100%;height:320px;
+  background:#080c10;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  flex-shrink:0;
+  border-bottom:1px solid var(--border);
+}
+.modal-main-img img{
+  max-width:100%;max-height:100%;
+  object-fit:contain;
+}
+.modal-main-placeholder{
+  display:flex;flex-direction:column;align-items:center;gap:0.75rem;
+}
+.modal-main-placeholder-icon{font-size:3rem;opacity:0.2;}
+.modal-main-placeholder-text{font-family:var(--mono);font-size:0.65rem;color:var(--dim);letter-spacing:0.12em;text-transform:uppercase;}
+
+/* NAV ARROWS */
+.modal-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(13,17,23,0.85);border:1px solid var(--border2);
+  color:var(--text);width:36px;height:36px;border-radius:6px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:border-color 0.2s,color 0.2s;
+  font-family:var(--mono);
+}
+.modal-arrow:hover{border-color:var(--accent);color:var(--accent);}
+.modal-arrow.prev{left:12px;}
+.modal-arrow.next{right:12px;}
+.modal-arrow:disabled{opacity:0.3;cursor:default;}
+.modal-arrow:disabled:hover{border-color:var(--border2);color:var(--text);}
+
+/* COUNTER */
+.modal-counter{
+  position:absolute;bottom:10px;right:14px;
+  font-family:var(--mono);font-size:0.65rem;color:var(--dim);
+  letter-spacing:0.08em;
+}
+
+/* THUMBNAILS */
+.modal-thumbs{
+  display:flex;gap:0.6rem;
+  padding:0.875rem 1.25rem;
+  overflow-x:auto;
+  flex-shrink:0;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+}
+.modal-thumbs::-webkit-scrollbar{height:4px;}
+.modal-thumbs::-webkit-scrollbar-track{background:transparent;}
+.modal-thumbs::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+.thumb-item{
+  width:72px;height:56px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  overflow:hidden;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:border-color 0.15s;
+  background:#080c10;
+  display:flex;align-items:center;justify-content:center;
+}
+.thumb-item img{width:100%;height:100%;object-fit:cover;}
+.thumb-item.active{border-color:var(--accent);}
+.thumb-item:hover{border-color:var(--border2);}
+.thumb-item.active:hover{border-color:var(--accent);}
+.thumb-placeholder{font-size:1rem;opacity:0.25;}
+
+/* MODAL INFO */
+.modal-info{
+  padding:1rem 1.5rem 1.25rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;
+  flex-shrink:0;
+}
+.modal-desc{font-size:0.85rem;color:var(--muted);line-height:1.75;flex:1;}
+.modal-tags{display:flex;flex-wrap:wrap;gap:0.35rem;flex-shrink:0;}
+.modal-ext-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:var(--mono);font-size:0.7rem;color:var(--accent);
+  text-decoration:none;letter-spacing:0.05em;
+  padding:0.5rem 0.875rem;
+  border:1px solid rgba(61,220,132,0.25);border-radius:4px;
+  transition:border-color 0.2s;white-space:nowrap;
+  flex-shrink:0;
+}
+.modal-ext-link:hover{border-color:var(--accent);}
+
+/* ADD PHOTOS HINT */
+.modal-add-hint{
+  padding:0.6rem 1.25rem;
+  background:rgba(61,220,132,0.04);
+  border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:0.62rem;color:var(--dim);
+  letter-spacing:0.08em;
+  flex-shrink:0;
+}
+
+@media(max-width:768px){
+  nav{padding:1rem 1.25rem;}.nav-links{gap:1.25rem;}
+  section{padding:3.5rem 1.25rem;}
+  .hero{padding:6rem 1.25rem 3rem;}
+  .hero-inner{grid-template-columns:1fr;gap:3rem;}
+  .phone-wrap{display:none;}
+  .about-grid{grid-template-columns:1fr;}
+  .contact-wrap{grid-template-columns:1fr;}
+  .divider{margin:0 1.25rem;}
+  .profile-section{flex-direction:column;text-align:center;}
+  .modal-info{flex-direction:column;}
+  .modal-main-img{height:220px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">emmanuelpetero</span>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-glow"></div><div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div>
+      <p class="hero-tag">Android Developer · Bulacan, PH</p>
+      <h1>Hi, I'm<span class="name-accent">Emmanuel.</span>I build Android apps.</h1>
+      <p class="hero-sub">Junior Android developer shipping real mobile apps and web systems using Java, Firebase, and Laravel. Based in Bulacan — open to remote work.</p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View projects →</a>
+        <a href="#contact" class="btn-ghost">Get in touch</a>
+      </div>
+    </div>
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-avatar">
+            <img src="images/profile.jpg" alt="Emmanuel" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="phone-avatar-placeholder" style="display:none">EJ</div>
+          </div>
+          <div class="phone-name">EMMANUEL PETERO</div>
+          <div class="phone-role">Android Developer</div>
+          <div class="phone-divider"></div>
+          <div class="phone-stat-row">
+            <div class="phone-stat"><div class="phone-stat-num">5+</div><div class="phone-stat-label">Projects</div></div>
+            <div class="phone-stat"><div class="phone-stat-num">3</div><div class="phone-stat-label">Clients</div></div>
+          </div>
+          <div class="phone-bar"><div class="phone-bar-dot"></div><div class="phone-bar-text">Java · Firebase · SQLite</div></div>
+          <div class="phone-bar"><div class="phone-bar-dot" style="background:#4285f4"></div><div class="phone-bar-text">Laravel · PHP · MySQL</div></div>
+          <div class="phone-bar"><div class="phone-bar-dot" style="background:#febc2e"></div><div class="phone-bar-text">Upwork Rising Talent</div><div class="phone-bar-badge">✓</div></div>
+        </div>
+      </div>
+      <div class="badge-float b1">Java</div>
+      <div class="badge-float b2">Firebase</div>
+      <div class="badge-float b3">Android Studio</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<section id="about">
+  <p class="section-label">// about.me</p>
+  <h2 class="section-title">Developer by choice, <span>not by default.</span></h2>
+  <div class="profile-section fade-in">
+    <div class="profile-photo">
+      <img src="photo/gradpic.jfif" alt="Emmanuel Petero" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="profile-photo-placeholder" style="display:none">EJ</div>
+    </div>
+    <div class="profile-info">
+      <h2>Emmanuel John P. Petero</h2>
+      <p>Android Developer · Bulacan State University Graduate</p>
+      <span>BS Information Technology · 2025 · San Jose Del Monte, Bulacan</span>
+    </div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <p>I graduated with a <strong>Bachelor of Science in Information Technology from Bulacan State University</strong> and have been building real projects throughout my studies — not just coursework.</p>
+      <p>I've shipped mobile apps to the public, built a working POS system for a small business, and helped students complete their thesis systems. My approach is to understand <strong>why code works</strong>, not just copy it.</p>
+      <p>I'm actively looking for a <strong>junior Android or web developer role</strong> where I can contribute from day one, while continuing to grow as a developer.</p>
+    </div>
+    <div class="about-card fade-in">
+      <div class="about-card-header">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <span class="about-card-title">profile.json</span>
+      </div>
+      <div class="about-card-body">
+        <div><span class="code-bracket">{</span></div>
+        <div>&nbsp;&nbsp;<span class="code-key">"name"</span>: <span class="code-str">"Emmanuel Petero"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-key">"role"</span>: <span class="code-str">"Android Developer"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-key">"location"</span>: <span class="code-str">"Bulacan, PH"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-key">"primary"</span>: <span class="code-str">"Java"</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-key">"available"</span>: <span class="code-str">true</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-key">"projects"</span>: <span class="code-num">5</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-key">"clients"</span>: <span class="code-num">3</span>,</div>
+        <div>&nbsp;&nbsp;<span class="code-comment">// open to remote work</span></div>
+        <div><span class="code-bracket">}</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="skills">
+  <p class="section-label">// skills.xml</p>
+  <h2 class="section-title">What I <span>work with.</span></h2>
+  <div class="skills-grid">
+    <div class="skill-card fade-in"><div class="skill-icon-label">mobile</div><h3>Android Development</h3><p>Java, Android Studio, Firebase, SQLite, CameraX, TensorFlow Lite, MVVM architecture</p></div>
+    <div class="skill-card fade-in"><div class="skill-icon-label">web</div><h3>Web & Backend</h3><p>Laravel, PHP, MySQL — built and deployed a full POS system for a real business client</p></div>
+    <div class="skill-card fade-in"><div class="skill-icon-label">game</div><h3>Game Development</h3><p>Unity (C#), GDevelop, Game Maker Studio — published titles on itch.io</p></div>
+    <div class="skill-card fade-in"><div class="skill-icon-label">tools</div><h3>Tools & Practices</h3><p>Git, GitHub, debugging, clean code, MVVM, Upwork freelancing (Rising Talent badge)</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="projects">
+  <p class="section-label">// projects[]</p>
+  <h2 class="section-title">Things I've <span>shipped.</span></h2>
+  <div class="projects-grid">
+
+    <div class="project-card fade-in" onclick="openModal('cooking-magic')">
+      <div class="project-thumb">
+        <img src="CookingMagic/cookingmagiclogo.png" alt="Cooking Magic" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="project-thumb-placeholder" style="display:none"><div class="ph-icon">🍳</div><div class="ph-hint">add screenshot</div></div>
+        <div class="project-overlay"><div class="project-overlay-icon">🖼</div><div class="project-overlay-text">view screenshots</div></div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags"><span class="tag">Java</span><span class="tag">Firebase</span><span class="tag">TensorFlow Lite</span><span class="tag">Android</span></div>
+        <h3>Cooking Magic</h3>
+        <p>Android app that identifies ingredients via real-time camera and recommends meals based on what's available.</p>
+        <div class="project-footer">
+          <a href="https://edgegamedev.itch.io/cookingmagic" target="_blank" class="project-link" onclick="event.stopPropagation()">itch.io →</a>
+          <span class="click-hint">click to view screenshots</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in" onclick="openModal('flexfit')">
+      <div class="project-thumb">
+        <img src="FlexFit/flexfitlogo.png" alt="FlexFit" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="project-thumb-placeholder" style="display:none"><div class="ph-icon">💪</div><div class="ph-hint">add screenshot</div></div>
+        <div class="project-overlay"><div class="project-overlay-icon">🖼</div><div class="project-overlay-text">view screenshots</div></div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags"><span class="tag">Java</span><span class="tag">SQLite</span><span class="tag">Firebase</span><span class="tag">Android</span></div>
+        <h3>FlexFit</h3>
+        <p>Fitness tracking app that records BMI and workout progress with personalized plans adapting to user-defined goals.</p>
+        <div class="project-footer">
+          <a href="https://edge-indiegamedev.itch.io/flexfit" target="_blank" class="project-link" onclick="event.stopPropagation()">itch.io →</a>
+          <span class="click-hint">click to view screenshots</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in" onclick="openModal('movihunt')">
+      <div class="project-thumb">
+        <img src="MoviHunt/mh1.jpg" alt="MoviHunt" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="project-thumb-placeholder" style="display:none"><div class="ph-icon">🧾</div><div class="ph-hint">add screenshot</div></div>
+        <div class="project-overlay"><div class="project-overlay-icon">🖼</div><div class="project-overlay-text">view screenshots</div></div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags"><span class="tag blue">Laravel</span><span class="tag blue">PHP</span><span class="tag blue">MySQL</span></div>
+        <h3>MoviHunt</h3>
+        <p>Movie-based word puzzle game where players type movie titles using an on-screen keyboard, earn points, and discover movies through trailers and synopsis pages.</p>
+        <div class="project-footer">
+          <a href="https://github.com/emmanuelpetero0027" target="_blank" class="project-link" onclick="event.stopPropagation()">GitHub →</a>
+          <span class="click-hint">click to view screenshots</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in" onclick="openModal('shuttlemaze')">
+      <div class="project-thumb">
+        <img src="ShuttleMaze/sm1.png" alt="ShuttleMaze" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="project-thumb-placeholder" style="display:none"><div class="ph-icon">🎮</div><div class="ph-hint">add screenshot</div></div>
+        <div class="project-overlay"><div class="project-overlay-icon">🖼</div><div class="project-overlay-text">view screenshots</div></div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags"><span class="tag">GDevelop</span></div>
+        <h3>ShuttleMaze</h3>
+        <p>2D maze game with teleportation mechanics and increasing difficulty levels. Published on itch.io.</p>
+        <div class="project-footer">
+          <a href="https://edgeemm.itch.io/shuttlemaze" target="_blank" class="project-link" onclick="event.stopPropagation()">Play →</a>
+          <span class="click-hint">click to view screenshots</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card fade-in" onclick="openModal('muggy')">
+      <div class="project-thumb">
+        <img src="Muggy/mg1.jpg" alt="Muggy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="project-thumb-placeholder" style="display:none"><div class="ph-icon">⚡</div><div class="ph-hint">add screenshot</div></div>
+        <div class="project-overlay"><div class="project-overlay-icon">🖼</div><div class="project-overlay-text">view screenshots</div></div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags"><span class="tag">Unity</span><span class="tag">C#</span></div>
+        <h3>Muggy</h3>
+        <p>Fast-paced reflex game in Unity with custom scoring and difficulty progression. Published on itch.io.</p>
+        <div class="project-footer">
+          <a href="https://emmpetero.itch.io/muggy" target="_blank" class="project-link" onclick="event.stopPropagation()">Play →</a>
+          <span class="click-hint">click to view screenshots</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contact">
+  <p class="section-label">// contact.init()</p>
+  <div class="contact-wrap">
+    <div class="contact-text fade-in">
+      <h2>Let's work together.</h2>
+      <p>Open to junior developer roles, freelance Android or web projects, and small business app builds. Based in Bulacan — available remotely.</p>
+    </div>
+    <div class="contact-links fade-in">
+      <a href="mailto:emmanuelpetero0027@gmail.com" class="contact-item"><span class="contact-icon">email</span><span class="contact-val">emmanuelpetero0027@gmail.com</span></a>
+      <a href="https://github.com/emmanuelpetero0027" target="_blank" class="contact-item"><span class="contact-icon">github</span><span class="contact-val">github.com/emmanuelpetero0027</span></a>
+      <a href="https://www.upwork.com/freelancers/~01028b83ffff4e8b2d" target="_blank" class="contact-item"><span class="contact-icon">upwork</span><span class="contact-val">Rising Talent · $10/hr</span></a>
+      <a href="tel:09064816901" class="contact-item"><span class="contact-icon">phone</span><span class="contact-val">09064816901</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Emmanuel John P. Petero · Android Developer · Bulacan, Philippines · built with HTML & CSS</p>
+</footer>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="handleBackdropClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+        <div>
+          <div class="modal-title" id="modal-title">project</div>
+          <div class="modal-project-name" id="modal-project-name"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-main-img">
+        <button class="modal-arrow prev" id="arrow-prev" onclick="changeImage(-1)">‹</button>
+        <img id="modal-main-img" src="" alt="" style="display:none">
+        <div id="modal-main-placeholder" class="modal-main-placeholder">
+          <div class="modal-main-placeholder-icon" id="modal-placeholder-icon"></div>
+        </div>
+        <button class="modal-arrow next" id="arrow-next" onclick="changeImage(1)">›</button>
+        <div class="modal-counter" id="modal-counter"></div>
+      </div>
+      <div class="modal-thumbs" id="modal-thumbs"></div>
+      <div class="modal-info">
+        <p class="modal-desc" id="modal-desc"></p>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;flex-shrink:0;">
+          <div class="modal-tags" id="modal-tags"></div>
+          <a id="modal-ext-link" href="#" target="_blank" class="modal-ext-link">view live →</a>
+        </div>
+      </div>
+      <div class="modal-add-hint" id="modal-add-hint"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PROJECTS = {
+  'cooking-magic': {
+    name: 'Cooking Magic',
+    desc: 'Android app that identifies ingredients via real-time camera input using a custom Teachable Machine model integrated with TensorFlow Lite, then recommends meals based on what\'s available.',
+    tags: ['Java','Firebase','TensorFlow Lite','Android'],
+    link: 'https://edgegamedev.itch.io/cookingmagic',
+    linkText: 'view on itch.io →',
+    screenshots: [
+      'CookingMagic/cm.jpg',
+      'CookingMagic/cm2.1.jpg',
+      'CookingMagic/cm2.jpg',
+      'CookingMagic/cm3.jpg',
+      'CookingMagic/cm4.jpg',
+      'CookingMagic/cm5.jpg',
+      'CookingMagic/cm6.jpg',
+      'CookingMagic/cm6.1.jpg',
+      'CookingMagic/cm7.jpg',
+      'CookingMagic/cm7.1.jpg',
+    ],
+    hint: 'Add more screenshots: cooking-magic-2.jpg, cooking-magic-3.jpg, etc.'
+  },
+  'flexfit': {
+    name: 'FlexFit',
+    icon: '💪',
+    desc: 'Fitness tracking Android app that records BMI, workout progress, and generates personalized plans stored locally in SQLite with dynamic recommendations based on user goals.',
+    tags: ['Java','SQLite','Firebase','Android'],
+    link: 'https://edge-indiegamedev.itch.io/flexfit',
+    linkText: 'view on itch.io →',
+    screenshots: [
+      'FlexFit/ff1.jpg',
+      'FlexFit/ff2.jpg',
+      'FlexFit/ff3.jpg',
+      'FlexFit/ff4.jpg',
+      'FlexFit/ff5.jpg',
+      'FlexFit/ff6.jpg',
+      'FlexFit/ff7.jpg',
+      'FlexFit/ff8.jpg',
+    ],
+    hint: 'Add more screenshots: flexfit-2.jpg, flexfit-3.jpg, etc.'
+  },
+  'movihunt': {
+    name: 'MoviHunt',
+    icon: '🧾',
+    desc: 'Movie-based word puzzle game where players type movie titles using an on-screen keyboard, earn points, and discover movies through trailers and synopsis pages.',
+    tags: ['GDevelop'],
+    link: 'https://github.com/emmanuelpetero0027',
+    linkText: 'view on GitHub →',
+    screenshots: [
+      'MoviHunt/mh1.jpg',
+      'MoviHunt/mh2.jpg',
+      'MoviHunt/mh3.jpg',
+      'MoviHunt/mh4.jpg',
+      'MoviHunt/mh5.jpg',
+      'MoviHunt/mh6.jpg',
+    ],
+    hint: 'Add more screenshots: movihunt-2.jpg, movihunt-3.jpg, etc.'
+  },
+  'shuttlemaze': {
+    name: 'ShuttleMaze',
+    icon: '🎮',
+    desc: 'A 2D maze game with teleportation mechanics and increasing difficulty levels. Designed and shipped independently using GDevelop and published publicly on itch.io.',
+    tags: ['GDevelop'],
+    link: 'https://edgeemm.itch.io/shuttlemaze',
+    linkText: 'play on itch.io →',
+    screenshots: [
+      'ShuttleMaze/sm2.png',
+      'ShuttleMaze/sm3.png',
+      'ShuttleMaze/sm4.png',
+      'ShuttleMaze/sm5.png',
+      'ShuttleMaze/sm6.png',
+      'ShuttleMaze/sm7.png',
+      'ShuttleMaze/sm8.png',
+      'ShuttleMaze/sm9.png',
+      'ShuttleMaze/sm10.png',
+      'ShuttleMaze/sm11.png',
+    ],
+    hint: 'Add more screenshots: shuttlemaze-2.jpg, shuttlemaze-3.jpg, etc.'
+  },
+  'muggy': {
+    name: 'Muggy',
+    icon: '⚡',
+    desc: 'Fast-paced reflex game built in Unity (C#) with a custom scoring system and difficulty progression. Published and playable on itch.io.',
+    tags: ['Unity','C#'],
+    link: 'https://emmpetero.itch.io/muggy',
+    linkText: 'play on itch.io →',
+    screenshots: [
+      'Muggy/mg1.jpg',
+      'Muggy/mg2.jpg',
+      'Muggy/mg3.jpg',
+      'Muggy/mg4.jpg',
+    ],
+    hint: 'Add more screenshots: muggy-2.jpg, muggy-3.jpg, etc.'
+  }
+};
+
+let currentProject = null;
+let currentIndex = 0;
+let loadedImages = [];
+
+function openModal(id) {
+  currentProject = PROJECTS[id];
+  currentIndex = 0;
+  loadedImages = [];
+
+  document.getElementById('modal-title').textContent = '// ' + id;
+  document.getElementById('modal-project-name').textContent = currentProject.name;
+  document.getElementById('modal-desc').textContent = currentProject.desc;
+  document.getElementById('modal-placeholder-icon').textContent = currentProject.icon;
+  document.getElementById('modal-add-hint').textContent = currentProject.hint;
+
+  const extLink = document.getElementById('modal-ext-link');
+  extLink.href = currentProject.link;
+  extLink.textContent = currentProject.linkText;
+
+  const tagsEl = document.getElementById('modal-tags');
+  tagsEl.innerHTML = currentProject.tags.map(t =>
+    `<span class="tag">${t}</span>`
+  ).join('');
+
+  buildThumbs();
+  showImage(0);
+
+  document.getElementById('modal-backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function buildThumbs() {
+  const thumbsEl = document.getElementById('modal-thumbs');
+  thumbsEl.innerHTML = '';
+  currentProject.screenshots.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'thumb-item' + (i === 0 ? ' active' : '');
+    div.onclick = () => showImage(i);
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.onerror = function() {
+      this.style.display = 'none';
+      const span = document.createElement('span');
+      span.className = 'thumb-placeholder';
+      span.textContent = currentProject.icon;
+      div.appendChild(span);
+    };
+    div.appendChild(img);
+    thumbsEl.appendChild(div);
+  });
+}
+
+function showImage(index) {
+  const screenshots = currentProject.screenshots;
+  if(index < 0 || index >= screenshots.length) return;
+  currentIndex = index;
+
+  const mainImg = document.getElementById('modal-main-img');
+  const placeholder = document.getElementById('modal-main-placeholder');
+
+  mainImg.style.display = 'none';
+  placeholder.style.display = 'flex';
+
+  const testImg = new Image();
+  testImg.onload = function() {
+    mainImg.src = screenshots[index];
+    mainImg.style.display = 'block';
+    placeholder.style.display = 'none';
+  };
+  testImg.onerror = function() {
+    mainImg.style.display = 'none';
+    placeholder.style.display = 'flex';
+  };
+  testImg.src = screenshots[index];
+
+  document.querySelectorAll('.thumb-item').forEach((t,i) => {
+    t.classList.toggle('active', i === index);
+  });
+
+  document.getElementById('modal-counter').textContent =
+    (index + 1) + ' / ' + screenshots.length;
+
+  document.getElementById('arrow-prev').disabled = index === 0;
+  document.getElementById('arrow-next').disabled = index === screenshots.length - 1;
+}
+
+function changeImage(dir) {
+  showImage(currentIndex + dir);
+}
+
+function closeModal() {
+  document.getElementById('modal-backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleBackdropClick(e) {
+  if(e.target === document.getElementById('modal-backdrop')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  const backdrop = document.getElementById('modal-backdrop');
+  if(!backdrop.classList.contains('open')) return;
+  if(e.key === 'Escape') closeModal();
+  if(e.key === 'ArrowLeft') changeImage(-1);
+  if(e.key === 'ArrowRight') changeImage(1);
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if(entry.isIntersecting) setTimeout(() => entry.target.classList.add('visible'), i * 100);
+  });
+}, {threshold: 0.08});
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
